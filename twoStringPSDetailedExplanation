@@ -1,0 +1,36 @@
+def check_order(P, S):
+    order_map = {char: index for index, char in enumerate(P)}
+    result = []
+    
+    for word in S:
+        prev_index = -1
+        is_ordered = True
+        
+        for char in word:
+            if char in order_map:
+                curr_index = order_map[char]
+                if curr_index < prev_index:
+                    is_ordered = False
+                    break
+                prev_index = curr_index
+        
+        result.append(is_ordered)
+    
+    return result
+
+# Example usage
+P = 'abc'
+S = ['ab', 'bbb', 'bca', 'aaa', 'abc', 'aac']
+
+output = check_order(P, S)
+print(output)
+
+
+explanation:
+
+In this code, the check_order function takes the string P and the string array S as input. It creates an order_map dictionary where the keys are characters from P and the values are their corresponding indices. Then, it iterates over each word in S and checks if the characters in the word follow the order specified by P. If any character violates the order, the is_ordered flag is set to False. Finally, the boolean results are stored in the result list and returned as the output.
+
+output:
+[True, True, False, True, True, True]
+
+Each True or False value in the output list represents whether the corresponding word in S follows the order specified by P.
