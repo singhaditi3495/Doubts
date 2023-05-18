@@ -1,0 +1,41 @@
+SELECT
+  createDate,
+  SUM(CASE WHEN visitorid NOT IN (SELECT visitorid FROM visitors WHERE createDate < t.createDate) THEN 1 ELSE 0 END) AS Visitor_gain,
+  CASE
+    WHEN COUNT(DISTINCT visitorid) - LAG(COUNT(DISTINCT visitorid)) OVER (ORDER BY createDate) < 0 THEN ABS(COUNT(DISTINCT visitorid) - LAG(COUNT(DISTINCT visitorid)) OVER (ORDER BY createDate))
+    ELSE 0
+  END AS Visitor_loss
+  FROM
+  visitors t
+GROUP BY
+  createDate
+ORDER BY
+  createDate;
+
+===========================
+https://app.snowflake.com/central-india.azure/el19698/w4LvUdClmqtY#query
+
+CREATEDATE	VISITOR_GAIN	VISITOR_LOSS
+01-jan-2021	3	0
+02-jan-2021	0	2
+03-jan-2021	2	0
+
+=============================
+create table  visitors (createDate string,visitorid string);
+
+INSERT INTO visitors (createDate, visitorid)
+    VALUES ('01-jan-2021','v1');
+INSERT INTO visitors (createDate, visitorid)
+    VALUES ('01-jan-2021','v2');
+INSERT INTO visitors (createDate, visitorid)
+    VALUES ('01-jan-2021','v3');  
+INSERT INTO visitors (createDate, visitorid)
+    VALUES ('02-jan-2021','v2');    
+INSERT INTO visitors (createDate, visitorid)
+    VALUES ('03-jan-2021','v2');
+INSERT INTO visitors (createDate, visitorid)
+    VALUES ('03-jan-2021','v4');
+INSERT INTO visitors (createDate, visitorid)
+    VALUES ('03-jan-2021','v5');   
+    
+=============================    
